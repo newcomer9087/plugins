@@ -23,14 +23,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "0.0.5"
+version = "0.0.10"
 
-project.extra["PluginName"] = "Barbarian Assault"
-project.extra["PluginDescription"] = "Custom barbarian assault plugin, use along with BA Tools"
-
-dependencies {
-    compileOnly(project(":attackstyles"))
-}
+project.extra["PluginName"] = "Barbarian Assault (BegOsrs)"
+project.extra["PluginDescription"] = "BegOsrs's Barbarian Assault helper"
 
 tasks {
     jar {

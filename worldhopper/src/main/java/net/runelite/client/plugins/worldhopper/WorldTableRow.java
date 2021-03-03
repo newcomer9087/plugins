@@ -64,7 +64,7 @@ class WorldTableRow extends JPanel
 	private static final Color TOURNAMENT_WORLD = new Color(79, 145, 255);
 	private static final Color MEMBERS_WORLD = new Color(210, 193, 53);
 	private static final Color FREE_WORLD = new Color(200, 200, 200);
-	private static final Color LEAGUE_WORLD = new Color(157, 237, 1);
+	private static final Color LEAGUE_WORLD = new Color(133, 177, 178);
 
 	static
 	{
@@ -207,7 +207,12 @@ class WorldTableRow extends JPanel
 	void updatePlayerCount(int playerCount)
 	{
 		this.updatedPlayerCount = playerCount;
-		playerCountField.setText(String.valueOf(playerCount));
+		playerCountField.setText(playerCountString(playerCount));
+	}
+
+	private static String playerCountString(int playerCount)
+	{
+		return playerCount < 0 ? "OFF" : Integer.toString(playerCount);
 	}
 
 	void setPing(int ping)
@@ -272,7 +277,7 @@ class WorldTableRow extends JPanel
 		JPanel column = new JPanel(new BorderLayout());
 		column.setBorder(new EmptyBorder(0, 5, 0, 5));
 
-		playerCountField = new JLabel(world.getPlayers() + "");
+		playerCountField = new JLabel(playerCountString(world.getPlayers()));
 		playerCountField.setFont(FontManager.getRunescapeSmallFont());
 
 		column.add(playerCountField, BorderLayout.WEST);

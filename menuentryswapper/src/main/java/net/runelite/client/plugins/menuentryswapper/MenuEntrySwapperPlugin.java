@@ -82,6 +82,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.menuentryswapper.comparables.GrimyHerbComparableEntry;
+import net.runelite.client.plugins.menuentryswapper.util.HouseAdvertisementMode;
 import net.runelite.client.util.HotkeyListener;
 import static net.runelite.client.util.MenuUtil.swap;
 import org.pf4j.Extension;
@@ -117,9 +118,6 @@ public class MenuEntrySwapperPlugin extends Plugin
 		"fishing guild", "mining guild", "crafting guild", "cooking guild", "woodcutting guild", "farming guild",
 		"miscellania", "grand exchange", "falador park", "dondakan's rock", "edgeville", "karamja",
 		"draynor village", "al kharid"
-	);
-	private static final List<String> pharaohsSceptre = Arrays.asList(
-		"Pharaoh's Sceptre (3)", "Pharaoh's Sceptre (2)", "Pharaoh's Sceptre (1)", "Pharaoh's Sceptre"
 	);
 	private static final List<String> npcContact = Arrays.asList(
 		"honest jimmy", "bert the sandman", "advisor ghrim", "dark mage", "lanthus", "turael",
@@ -342,11 +340,6 @@ public class MenuEntrySwapperPlugin extends Plugin
 		{
 			String option = Text.removeTags(entry.getOption()).toLowerCase();
 
-			if (option.contains("examine") && config.hideExamine())
-			{
-				continue;
-			}
-
 			if (option.contains("net") && config.hideNet())
 			{
 				continue;
@@ -468,7 +461,7 @@ public class MenuEntrySwapperPlugin extends Plugin
 		{
 			MenuEntry[] menuEntries = client.getMenuEntries();
 			MenuEntry menuEntry = menuEntries[menuEntries.length - 1];
-			menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
+			menuEntry.setOpcode(menuEntry.getOpcode() + MENU_ACTION_DEPRIORITIZE_OFFSET);
 			client.setMenuEntries(menuEntries);
 		}
 
@@ -805,6 +798,7 @@ public class MenuEntrySwapperPlugin extends Plugin
 
 		if (config.swapTrade())
 		{
+			// NOTE: this doesn't swap on players, the option on players is "Trade with", note the space
 			menuManager.addPriorityEntry("Trade").setPriority(1);
 			menuManager.addPriorityEntry("Trade-with").setPriority(1);
 			menuManager.addPriorityEntry("Shop").setPriority(1);
@@ -831,7 +825,7 @@ public class MenuEntrySwapperPlugin extends Plugin
 			menuManager.addPriorityEntry("Ungael").setPriority(10);
 			menuManager.addPriorityEntry("Pirate's Cove").setPriority(10);
 			menuManager.addPriorityEntry("Waterbirth Island").setPriority(10);
-			menuManager.addPriorityEntry("Miscellania").setPriority(10);
+			menuManager.addPriorityEntry("Miscellania", "Sailor").setPriority(10);
 			menuManager.addPriorityEntry("Island of Stone").setPriority(10);
 			menuManager.addPriorityEntry("Follow", "Elkoy").setPriority(10);
 			menuManager.addPriorityEntry("Transport").setPriority(10);
@@ -1095,14 +1089,6 @@ public class MenuEntrySwapperPlugin extends Plugin
 			}
 		}
 
-		if (config.swapPharaohsSceptre())
-		{
-			for (String pharaohsSceptre : pharaohsSceptre)
-			{
-				menuManager.addPriorityEntry("Wield", pharaohsSceptre);
-			}
-		}
-
 		if (config.swapDropFish())
 		{
 			for (String dropFish : dropFish)
@@ -1274,16 +1260,12 @@ public class MenuEntrySwapperPlugin extends Plugin
 		menuManager.removePriorityEntry(EMPTY_LARGE);
 		menuManager.removePriorityEntry(EMPTY_GIANT);
 		menuManager.removePriorityEntry(config.swapHomePortalMode().toString(), "Portal");
-		menuManager.removePriorityEntry(config.swapHouseAdMode().toString(), "House Advertisement");
+		Arrays.stream(HouseAdvertisementMode.values()).forEach(value -> menuManager.removePriorityEntry(value.toString(), "House Advertisement"));
 		for (String jewellerybox : jewelleryBox)
 		{
 			menuManager.removePriorityEntry(jewellerybox, "basic jewellery box");
 			menuManager.removePriorityEntry(jewellerybox, "fancy jewellery box");
 			menuManager.removePriorityEntry(jewellerybox, "ornate jewellery box");
-		}
-		for (String pharaohsSceptre : pharaohsSceptre)
-		{
-			menuManager.removePriorityEntry("Wield", pharaohsSceptre);
 		}
 
 		for (String dropFish : dropFish)
